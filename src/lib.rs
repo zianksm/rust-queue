@@ -19,6 +19,8 @@ pub mod traits {
 
         /// reset the queue, this method will only clear all the elements inside the queue inner [Vector](Vec).
         fn reset_element_only(&mut self);
+
+        fn is_empty(&self) -> bool;
     }
 }
 
@@ -35,7 +37,7 @@ impl<T> Queue<T> {
         &mut self.inner
     }
 
-    fn new() -> Self {
+    pub fn new() -> Self {
         let inner: Vec<T> = Vec::new();
 
         Self { inner }
@@ -66,6 +68,10 @@ impl<T> traits::QueueTrait<T> for Queue<T> {
     fn reset_element_only(&mut self) {
         self.inner.clear()
     }
+
+    fn is_empty(&self) -> bool {
+        self.inner.is_empty()
+    }
 }
 
 #[cfg(test)]
@@ -93,21 +99,59 @@ mod tests {
 
     #[test]
     fn should_dequeue() {
-        todo!()
+        let mut queue = Queue::new();
+
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        let _ = queue.dequeue();
+
+        let first_el = queue.inner()[0];
+        assert_eq!(first_el, 2);
+
+        let _ = queue.dequeue();
+
+        let first_el = queue.inner()[0];
+        assert_eq!(first_el, 3);
+
+        let _ = queue.dequeue();
+
+        assert!(queue.is_empty())
     }
 
     #[test]
+    #[should_panic]
     fn should_fail_dequeue_if_empty() {
-        todo!()
+        let mut queue: Queue<i32> = Queue::new();
+
+        queue.dequeue().unwrap();
     }
 
     #[test]
     fn should_reset_and_reallocate() {
-        todo!()
+        let mut queue: Queue<i32> = Queue::new();
+
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        assert_ne!(queue.inner_mut().capacity(), 0);
+
+        queue.reset_realloc();
+
+        assert_eq!(queue.inner_mut().capacity(), 0);
     }
 
     #[test]
     fn should_reset_element_only() {
-        todo!()
+        let mut queue: Queue<i32> = Queue::new();
+
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        queue.reset_element_only();
+
+        assert_ne!(queue.inner_mut().capacity(), 0);
+        assert!(queue.inner().is_empty());
     }
 }
