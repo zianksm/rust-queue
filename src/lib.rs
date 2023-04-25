@@ -1,14 +1,13 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+pub mod traits {
+    use std::error::Error;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+    pub trait QueueTrait<T> {
+        fn dequeue(&self) -> Result<bool, Box<dyn Error>>;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+        fn enqueue(&self) -> Result<bool, Box<dyn Error>>;
+
+        fn inner(&self) -> Result<Vec<T>, Box<dyn Error>>;
+
+        fn new() -> Self;
     }
 }
