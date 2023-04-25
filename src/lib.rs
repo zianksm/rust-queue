@@ -6,14 +6,22 @@ pub mod traits {
 
         fn enqueue(&self) -> Result<bool, Box<dyn Error>>;
 
-        fn inner(&self) -> Result<Vec<T>, Box<dyn Error>>;
-
         fn new() -> Self;
     }
 }
 
 pub struct Queue<T> {
     inner: Vec<T>,
+}
+
+impl<T> Queue<T> {
+    pub fn inner(&self) -> &[T] {
+        self.inner.as_ref()
+    }
+
+    pub fn inner_mut(&mut self) -> &mut Vec<T> {
+        &mut self.inner
+    }
 }
 
 impl<T> traits::QueueTrait<T> for Queue<T> {
