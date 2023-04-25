@@ -1,4 +1,4 @@
-use std::{error::Error};
+use std::error::Error;
 
 pub mod traits {
     use std::error::Error;
@@ -14,8 +14,6 @@ pub mod traits {
 
         /// reset the queue, this method will only clear all the elements inside the queue inner [Vector](Vec).
         fn reset_element_only(&mut self);
-
-        fn new() -> Self;
     }
 }
 
@@ -31,15 +29,15 @@ impl<T> Queue<T> {
     pub fn inner_mut(&mut self) -> &mut Vec<T> {
         &mut self.inner
     }
-}
 
-impl<T> traits::QueueTrait<T> for Queue<T> {
     fn new() -> Self {
         let inner: Vec<T> = Vec::new();
 
         Self { inner }
     }
+}
 
+impl<T> traits::QueueTrait<T> for Queue<T> {
     fn dequeue(&mut self) -> Result<T, Box<dyn Error>> {
         if self.inner.is_empty() {
             let err = anyhow::anyhow!("queue is empty");
@@ -62,5 +60,31 @@ impl<T> traits::QueueTrait<T> for Queue<T> {
 
     fn reset_element_only(&mut self) {
         self.inner.clear()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn should_enqueue() {
+        let queue = Queue::new();
+    }
+
+    #[test]
+    fn should_dequeue() {
+        todo!()
+    }
+
+    #[test]
+    fn should_reset_and_reallocate() {
+        todo!()
+    }
+
+    #[test]
+    fn should_reset_element_only() {
+        todo!()
     }
 }
