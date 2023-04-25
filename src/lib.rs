@@ -2,9 +2,11 @@ pub mod traits {
     use std::error::Error;
 
     pub trait QueueTrait<T> {
-        fn dequeue(&self) -> Result<bool, Box<dyn Error>>;
+        fn dequeue(&mut self) -> Result<bool, Box<dyn Error>>;
 
-        fn enqueue(&self) -> Result<bool, Box<dyn Error>>;
+        fn enqueue(&mut self) -> Result<bool, Box<dyn Error>>;
+
+        fn reset(&mut self) -> Vec<T>;
 
         fn new() -> Self;
     }
@@ -25,21 +27,21 @@ impl<T> Queue<T> {
 }
 
 impl<T> traits::QueueTrait<T> for Queue<T> {
-    fn dequeue(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        todo!()
-    }
-
-    fn enqueue(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        todo!()
-    }
-
-    fn inner(&self) -> Result<Vec<T>, Box<dyn std::error::Error>> {
-        todo!()
-    }
-
     fn new() -> Self {
         let inner: Vec<T> = Vec::new();
 
         Self { inner }
+    }
+
+    fn dequeue(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        todo!()
+    }
+
+    fn enqueue(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        todo!()
+    }
+
+    fn reset(&mut self) -> Vec<T> {
+        std::mem::take(&mut self.inner)
     }
 }
