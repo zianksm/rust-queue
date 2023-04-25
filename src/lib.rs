@@ -1,12 +1,19 @@
+use std::{collections::VecDeque, error::Error};
+
 pub mod traits {
     use std::error::Error;
 
     pub trait QueueTrait<T> {
-        fn dequeue(&mut self) -> Result<bool, Box<dyn Error>>;
+        fn dequeue(&mut self) -> Result<T, Box<dyn Error>>;
 
-        fn enqueue(&mut self) -> Result<bool, Box<dyn Error>>;
+        fn enqueue(&mut self, value: T) -> ();
 
-        fn reset(&mut self) -> Vec<T>;
+        /// reset the queue and reallocate new memory for the queue,
+        /// this method will return the previous queue memory back to the system.
+        fn reset_realloc(&mut self) -> Vec<T>;
+
+        /// reset the queue, this method will only clear all the elements inside the queue inner [Vector](Vec).
+        fn reset_element_only(&mut self) -> ();
 
         fn new() -> Self;
     }
@@ -33,15 +40,27 @@ impl<T> traits::QueueTrait<T> for Queue<T> {
         Self { inner }
     }
 
-    fn dequeue(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        todo!()
+    fn dequeue(&mut self) -> Result<T, Box<dyn Error>> {
+        if self.inner.is_empty() {
+            let err = anyhow::anyhow!("queue is empty");
+
+            return Err(err)?;
+        }
+
+        Ok(self.inner.remove(0))
     }
 
-    fn enqueue(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        todo!()
+    fn enqueue(&mut self, value: T) -> () {
+        self.inner.push(value)
     }
 
-    fn reset(&mut self) -> Vec<T> {
-        std::mem::take(&mut self.inner)
+    fn reset_realloc(&mut self) -> Vec<T> {
+        let new_inner: Vec<T> = Vec::new();
+
+        std::mem::replace(&mut self.inner, new_inner)
+    }
+
+    fn reset_element_only(&mut self) -> () {
+        self.inner.clear()
     }
 }
