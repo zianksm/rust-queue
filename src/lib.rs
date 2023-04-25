@@ -1,5 +1,10 @@
 use std::error::Error;
 
+pub mod prelude {
+    pub use super::traits::*;
+    pub use super::Queue;
+}
+
 pub mod traits {
     use std::error::Error;
 
@@ -66,15 +71,33 @@ impl<T> traits::QueueTrait<T> for Queue<T> {
 #[cfg(test)]
 mod tests {
 
-    use super::*;
+    use super::prelude::*;
 
     #[test]
     fn should_enqueue() {
-        let queue = Queue::new();
+        let mut queue = Queue::new();
+
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        let first_el = queue.inner()[0];
+        assert_eq!(first_el, 1);
+
+        let mid_el = queue.inner()[1];
+        assert_eq!(mid_el, 2);
+
+        let last_el = queue.inner().last().unwrap().clone();
+        assert_eq!(last_el, 3);
     }
 
     #[test]
     fn should_dequeue() {
+        todo!()
+    }
+
+    #[test]
+    fn should_fail_dequeue_if_empty() {
         todo!()
     }
 
