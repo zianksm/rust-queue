@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, error::Error};
+use std::{error::Error};
 
 pub mod traits {
     use std::error::Error;
@@ -6,14 +6,14 @@ pub mod traits {
     pub trait QueueTrait<T> {
         fn dequeue(&mut self) -> Result<T, Box<dyn Error>>;
 
-        fn enqueue(&mut self, value: T) -> ();
+        fn enqueue(&mut self, value: T);
 
         /// reset the queue and reallocate new memory for the queue,
         /// this method will return the previous queue memory back to the system.
         fn reset_realloc(&mut self) -> Vec<T>;
 
         /// reset the queue, this method will only clear all the elements inside the queue inner [Vector](Vec).
-        fn reset_element_only(&mut self) -> ();
+        fn reset_element_only(&mut self);
 
         fn new() -> Self;
     }
@@ -50,7 +50,7 @@ impl<T> traits::QueueTrait<T> for Queue<T> {
         Ok(self.inner.remove(0))
     }
 
-    fn enqueue(&mut self, value: T) -> () {
+    fn enqueue(&mut self, value: T) {
         self.inner.push(value)
     }
 
@@ -60,7 +60,7 @@ impl<T> traits::QueueTrait<T> for Queue<T> {
         std::mem::replace(&mut self.inner, new_inner)
     }
 
-    fn reset_element_only(&mut self) -> () {
+    fn reset_element_only(&mut self) {
         self.inner.clear()
     }
 }
